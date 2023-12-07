@@ -33,8 +33,71 @@ public class DbConnection {
             e.printStackTrace();
         }
     }
+    
+    public static boolean isUsernameTaken(String username) {
+        try {
+            String tableName = "users";
+            String usernameColumn = "username";
 
-    private static String[] retrieveColumns(String tableName) {
+            String selectQuery = String.format("SELECT * FROM %s WHERE %s=?", tableName, usernameColumn);
+
+            try (PreparedStatement preparedStatement = con.prepareStatement(selectQuery)) {
+                preparedStatement.setString(1, username);
+
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    return resultSet.next();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
+    public static boolean authenticateUser(String username, String password) {
+        try {
+            String tableName = "users"; 
+            String usernameColumn = "username"; 
+            String passwordColumn = "password"; 
+
+            String selectQuery = String.format("SELECT * FROM %s WHERE %s=? AND %s=?", tableName, usernameColumn, passwordColumn);
+
+            try (PreparedStatement preparedStatement = con.prepareStatement(selectQuery)) {
+                preparedStatement.setString(1, username);
+                preparedStatement.setString(2, password); 
+
+                ResultSet resultSet = preparedStatement.executeQuery();
+
+                
+                return resultSet.next();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
+    public static void registerUser(String username, String password) {
+        try {
+            String tableName = "users"; 
+            String usernameColumn = "username";
+            String passwordColumn = "password"; 
+
+            String insertQuery = String.format("INSERT INTO %s (%s, %s) VALUES (?, ?)", tableName, usernameColumn, passwordColumn);
+
+            try (PreparedStatement preparedStatement = con.prepareStatement(insertQuery)) {
+                preparedStatement.setString(1, username);
+                preparedStatement.setString(2, password);
+
+                preparedStatement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    static String[] retrieveColumns(String tableName) {
         try {
             Statement stmt = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             ResultSet rs = stmt.executeQuery(String.format("SELECT COLUMN_NAME "
