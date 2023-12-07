@@ -1,24 +1,25 @@
 package application;
 
-import java.util.ArrayList;
 
+import java.util.ArrayList;
+import java.util.logging.Logger;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-
-import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 /**
  * 
- * @author lnbk
+ * 
  *
  */
 public class Main extends Application {
+	
+	 public static final Logger LOGGER = Logger.getLogger(Main.class.getName());
 	/**
 	 * variables score -> is for score count;
 	 */
@@ -72,7 +73,13 @@ public class Main extends Application {
 	 * instance of the background
 	 */
 	private Sprite background;
-
+	
+	
+	private final String TABLENAME = "USER";
+	private final String COLUMNNAME = "username";
+	private final String FINDTHIS = "password";
+		
+	
 	/**
 	 * In the start function is implemented a try catch function for get the game
 	 * start - also avoids the printStackTrace Exception
@@ -113,7 +120,20 @@ public class Main extends Application {
 	 */
 	@Override
 	public void start(Stage mainStage) {
-
+		
+		/**
+		 * instance of login 
+		 */
+		Login login = new Login();
+		
+		try {
+			DbConnection.retrieveByString(TABLENAME, COLUMNNAME, FINDTHIS);
+			LOGGER.info("Connection successful");
+		} catch (Exception e) {
+			LOGGER.warning("Connection failed" + e);
+		}
+		
+		
 		/*
 		 * the mainStage creates the application surface, in this case "canvas" sets the
 		 * parameter(width/height)
@@ -121,9 +141,17 @@ public class Main extends Application {
 		mainStage.setTitle("Asteroids");
 		BorderPane root = new BorderPane();
 		Scene mainScene = new Scene(root);
+		
 		mainStage.setScene(mainScene);
+		
+		
+		login.loginScreen(mainStage);
+		
+		
+		
 
 		Canvas canvas = new Canvas(800, 600);
+		
 
 		GraphicsContext gc = canvas.getGraphicsContext2D();
 		root.setCenter(canvas);
@@ -174,6 +202,7 @@ public class Main extends Application {
 
 		ArrayList<Sprite> laserlist = new ArrayList<Sprite>();
 		ArrayList<Sprite> asteroidList = new ArrayList<Sprite>();
+		
 		/*
 		 * the next section is starting the first stage with 6 asteroids they are
 		 * randomly appear by an field in the upper right corner
