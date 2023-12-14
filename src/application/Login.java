@@ -16,8 +16,6 @@ public class Login {
 	
 	 public static final Logger LOGGER = Logger.getLogger(Login.class.getName());
 	
-	 	private static final String VALID_USERNAME = "admin";
-	    private static final String VALID_PASSWORD = "password";
 	    
 	    public void loginScreen(Stage primaryStage) {
 	    primaryStage.setTitle("Login");
@@ -30,7 +28,7 @@ public class Login {
         PasswordField passwordField = new PasswordField();
 
         Button loginButton = new Button("Anmelden");
-        loginButton.setOnAction(e -> handleLogin(textFieldUsername.getText(), passwordField.getText()));
+        loginButton.setOnAction(e -> handleLogin(primaryStage,textFieldUsername.getText(), passwordField.getText()));
         
         Button registerButton = new Button("Registrieren");
         registerButton.setOnAction(e -> {
@@ -70,15 +68,16 @@ public class Login {
 			   }
 	    }
 	
-	    public boolean handleLogin(String username, String password) {
-	    	
-	        if (username.equals(VALID_USERNAME) && password.equals(VALID_PASSWORD)) {
-	        	LOGGER.info("Login successful");
-	        	return true;
-	        } else {
-	            LOGGER.warning("Worng password oder username - check them and try again");
-	        }
-			return false;
+	    public boolean handleLogin(Stage primaryStage, String username, String password) {
+	        if (DbConnection.authenticateUser(username, password)) {
+			    LOGGER.info("Login successful");
+			    primaryStage.close();
+			    return true;
+			} else {
+			    LOGGER.warning("Wrong password or username - check them and try again");
+			}
+	        return false;
 	    }
+
 	
 }
