@@ -36,7 +36,7 @@ public class DbConnection {
     
     public static boolean isUsernameTaken(String username) {
         try {
-            String tableName = "users";
+            String tableName = "USER";
             String usernameColumn = "username";
 
             String selectQuery = String.format("SELECT * FROM %s WHERE %s=?", tableName, usernameColumn);
