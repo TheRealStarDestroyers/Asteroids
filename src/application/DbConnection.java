@@ -56,7 +56,7 @@ public class DbConnection {
     
     public static boolean authenticateUser(String username, String password) {
         try {
-            String tableName = "users"; 
+            String tableName = "USER"; 
             String usernameColumn = "username"; 
             String passwordColumn = "password"; 
 
@@ -79,7 +79,7 @@ public class DbConnection {
     
     public static void registerUser(String username, String password) {
         try {
-            String tableName = "users"; 
+            String tableName = "USER"; 
             String usernameColumn = "username";
             String passwordColumn = "password"; 
 
