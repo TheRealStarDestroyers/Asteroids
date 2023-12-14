@@ -143,9 +143,9 @@ public class Main extends Application {
 		Scene mainScene = new Scene(root);
 		
 		mainStage.setScene(mainScene);
-		
-		
 		login.loginScreen(mainStage);
+		
+		
 		
 		
 		

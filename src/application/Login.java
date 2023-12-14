@@ -1,5 +1,6 @@
 package application;
 
+import java.sql.SQLException;
 import java.util.logging.Logger;
 
 import javafx.geometry.Insets;
@@ -32,7 +33,13 @@ public class Login {
         loginButton.setOnAction(e -> handleLogin(textFieldUsername.getText(), passwordField.getText()));
         
         Button registerButton = new Button("Registrieren");
-        registerButton.setOnAction(e -> handleRegister(textFieldUsername.getText(), passwordField.getText()) );
+        registerButton.setOnAction(e -> {
+			try {
+				handleRegister(textFieldUsername.getText(), passwordField.getText());
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+		} );
         
 
         // Layout erstellen
@@ -53,9 +60,14 @@ public class Login {
 	    layout.setPadding(new Insets(10));
 	    }
 	    
-	    private void handleRegister(String username, String password) {
-	    	//DB - Insert
-	    	
+	    private void handleRegister(String username, String password) throws SQLException {
+	    	   if (!DbConnection.isUsernameTaken(username)) {
+			  
+			       DbConnection.registerUser(username, password);
+			       LOGGER.info("Registration successful");
+			   } else {
+			       LOGGER.warning("Username is already taken. Please choose another one.");
+			   }
 	    }
 	
 	    public boolean handleLogin(String username, String password) {
